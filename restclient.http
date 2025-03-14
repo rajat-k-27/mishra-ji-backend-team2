@@ -1,0 +1,10 @@
+PUT http://localhost:3001/api/seller/update
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDQ3M2EwNDJlYjg3YmU5OGFlYTBjZSIsImlhdCI6MTc0MTk3OTgxNSwiZXhwIjoxNzQyNTg0NjE1fQ.7mhnyqBrCa5TtO6ivG3tYuWLp7X62jF3WFFAF6-PG8k
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="shopPhoto"; filename="Screenshot 2025-03-11 114534.png"
+Content-Type: image/png
+
+< "C:\Users\LENOVO\OneDrive\Pictures\Screenshots\Screenshot 2025-03-11 114534.png"
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
