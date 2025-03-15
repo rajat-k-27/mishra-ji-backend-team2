@@ -2,12 +2,16 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
 const SellerAuthSchema = new mongoose.Schema({
-  uid: { type: mongoose.Schema.Types.ObjectId, auto: true, unique: true }, // ✅ Add uid field
+  uid: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    auto: true, 
+    unique: true 
+  }, // ✅ Add uid field
   fullName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  phoneNumber: { type: String, required: true },
-  address: { type: String, required: true, unique: true },
+  phoneNumber: { type: String, required: true, unique: true  },
+  address: { type: String, required: true},
   businessName: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });
