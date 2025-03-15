@@ -1,5 +1,5 @@
-const express = require("express");
-const {
+import express from "express";
+import {
     getNewOrders,
     acceptOrder,
     rejectOrder,
@@ -8,7 +8,7 @@ const {
     getPastOrders,
     createOrder,
     trackOrder
-} = require("../controllers/orderController");
+} from "../controllers/orderController.js";
 
 const router = express.Router();
 
@@ -21,4 +21,4 @@ router.put("/:id/complete", completeOrder); // Mark order as completed
 router.get("/past", getPastOrders); // Get past orders
 router.get("/:id/track", trackOrder); // Get order tracking details
 
-module.exports = router;
+export default router;

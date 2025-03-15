@@ -1,7 +1,7 @@
-const Order = require("../models/order");
+import Order from "../models/order.js";
 
 // Get all new orders
-exports.getNewOrders = async (req, res) => {
+export const getNewOrders = async (req, res) => {
     try {
         const orders = await Order.find({ status: "New" }).sort({ createdAt: -1 });
         res.json(orders);
@@ -11,7 +11,7 @@ exports.getNewOrders = async (req, res) => {
 };
 
 // Accept an order
-exports.acceptOrder = async (req, res) => {
+export const acceptOrder = async (req, res) => {
     try {
         const order = await Order.findByIdAndUpdate(
             req.params.id,
@@ -27,7 +27,7 @@ exports.acceptOrder = async (req, res) => {
 };
 
 // Reject an order
-exports.rejectOrder = async (req, res) => {
+export const rejectOrder = async (req, res) => {
     try {
         const order = await Order.findByIdAndUpdate(
             req.params.id,
@@ -43,7 +43,7 @@ exports.rejectOrder = async (req, res) => {
 };
 
 // Get ongoing orders
-exports.getOngoingOrders = async (req, res) => {
+export const getOngoingOrders = async (req, res) => {
     try {
         const orders = await Order.find({ status: "Ongoing" }).sort({ createdAt: -1 });
         res.json(orders);
@@ -53,7 +53,7 @@ exports.getOngoingOrders = async (req, res) => {
 };
 
 // Mark order as completed
-exports.completeOrder = async (req, res) => {
+export const completeOrder = async (req, res) => {
     try {
         const order = await Order.findByIdAndUpdate(
             req.params.id,
@@ -69,7 +69,7 @@ exports.completeOrder = async (req, res) => {
 };
 
 // Get past orders (Completed + Canceled)
-exports.getPastOrders = async (req, res) => {
+export const getPastOrders = async (req, res) => {
     try {
         const orders = await Order.find({ status: { $in: ["Completed", "Canceled"] } }).sort({ createdAt: -1 });
         res.json(orders);
@@ -79,7 +79,7 @@ exports.getPastOrders = async (req, res) => {
 };
 
 // Get order tracking details
-exports.trackOrder = async (req, res) => {
+export const trackOrder = async (req, res) => {
     try {
         const order = await Order.findById(req.params.id);
         if (!order) return res.status(404).json({ message: "Order not found" });
@@ -97,7 +97,7 @@ exports.trackOrder = async (req, res) => {
 };
 
 // Create a new order
-exports.createOrder = async (req, res) => {
+export const createOrder = async (req, res) => {
     try {
         const { sellerId, customerName, items, totalAmount } = req.body;
 

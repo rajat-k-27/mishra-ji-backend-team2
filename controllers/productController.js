@@ -1,9 +1,9 @@
-const Product = require("../models/product.js");
-const cloudinary = require("../config/cloudinary");
-const mongoose = require("mongoose");
+import Product from "../models/product.js";
+import cloudinary from "../config/cloudinary.js";
+import mongoose from "mongoose";
 
 // Add product function with Cloudinary Image Upload
-exports.addProduct = async (req, res) => {
+export const addProduct = async (req, res) => {
   try {
     const { shopId, productName, category, shopLocation, price } = req.body;
 
