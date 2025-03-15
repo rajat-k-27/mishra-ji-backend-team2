@@ -6,17 +6,16 @@ const initSocket = (server) => {
     });
 
     io.on("connection", (socket) => {
-        console.log("A delivery agent connected:", socket.id);
-        
-        // Send 'hello' with the socket ID to the client
-        socket.emit("hello", { message: "Hello from server", socketId: socket.id });
+        console.log("A user connected: " + socket.id);
 
-        socket.on("update-location", (data) => {
-            io.emit(`order-track-${data.orderId}`, data.location);
+        socket.on("send-location", (data) => {
+            console.log("Received location:", data);
+            io.emit("receive-location", { id: socket.id, ...data });
         });
 
         socket.on("disconnect", () => {
-            console.log("Delivery agent disconnected:", socket.id);
+            console.log("User disconnected: " + socket.id);
+            io.emit("disconnected", socket.id);
         });
     });
 

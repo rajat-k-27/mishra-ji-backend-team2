@@ -1,5 +1,5 @@
 import Product from "../models/product.js";
-import cloudinary from "../config/cloudinary.js";
+import cloudinary from "../utils/cloudinary.js";
 import mongoose from "mongoose";
 
 // Add product function with Cloudinary Image Upload

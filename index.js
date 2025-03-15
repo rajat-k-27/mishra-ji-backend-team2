@@ -1,45 +1,48 @@
-const express = require("express");
-const http = require("http");
-const socketio = require("socket.io");
-const path = require("path");
-const trackingRoutes = require("./routes/trackingRoutes");
+import express from "express";
+import http from "http";
+import path from "path";
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+import connectDB from "./db/index.js";
 
-require("dotenv").config();
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
-});
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-// ✅ Use tracking routes correctly
-app.use("/api/tracking", trackingRoutes);
+// Routes
+import orderRoutes from './routes/orderRoutes.js';
+import productRoutes from './routes/productRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+import sellerRoutes from './routes/sellerRoutes.js';
+import trackingRoutes from './routes/trackingRoutes.js';
 
-// WebSocket connection for real-time tracking
-io.on("connection", (socket) => {
-  console.log("A user connected: " + socket.id);
+app.use('/api/orders', orderRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/seller', sellerRoutes);
+app.use('/api/tracking', trackingRoutes);
 
-  socket.on("send-location", (data) => {
-    console.log("Received location:", data);
-    io.emit("receive-location", { id: socket.id, ...data });
-  });
+// Start DB Connection and Server
+connectDB()
+    .then(() => {
+        server.listen(3000, () => {
+            console.log('Server is running on port 3000');
+        });
 
-  socket.on("disconnect", () => {
-    console.log("User disconnected: " + socket.id);
-    io.emit("disconnected", socket.id);
-  });
-});
+        // Import socket AFTER server is initialized
+        import("./socket/index.js").then(({ default: initSocket }) => {
+            initSocket(server);  // Pass server to socket setup function
+        });
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 
-app.get("/", (req, res) => {
-  res.json({ message: "Backend is running!" });
-});
-
-server.listen(3000, () => {
-  console.log("Server running on port 3000");
-});
+export { server, app };
