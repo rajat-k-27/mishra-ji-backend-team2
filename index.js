@@ -1,49 +1,45 @@
-import express from 'express';
-import dotenv from 'dotenv';
-dotenv.config();
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import http from 'http';
+const express = require("express");
+const http = require("http");
+const socketio = require("socket.io");
+const path = require("path");
+const trackingRoutes = require("./routes/trackingRoutes");
 
-import connectDB from './db/index.js';
+require("dotenv").config();
 
 const app = express();
 const server = http.createServer(app);
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(cors());
-
-app.get('/', (req, res) => {
-    res.send('Hello World');
+const io = socketio(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
 });
 
-// Routes
-import authRoutes from "./routes/authRoutes.js";
-import sellerRoutes from "./routes/sellerRoutes.js";
-import productRoutes from "./routes/productRoutes.js";
-import orderRoutes from './routes/orderRoutes.js';
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/api/auth", authRoutes);
-app.use("/api/seller", sellerRoutes);
-app.use("/api/products", productRoutes);
-app.use('/api/orders', orderRoutes)
+// ✅ Use tracking routes correctly
+app.use("/api/tracking", trackingRoutes);
 
-// Start DB Connection and Server
-connectDB()
-    .then(() => {
-        server.listen(3000, () => {
-            console.log('Server is running on port 3000');
-        });
+// WebSocket connection for real-time tracking
+io.on("connection", (socket) => {
+  console.log("A user connected: " + socket.id);
 
-        // Import socket AFTER server is initialized
-        import("./socket/index.js").then(({ default: initSocket }) => {
-            initSocket(server);  // Pass server to socket setup function
-        });
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+  socket.on("send-location", (data) => {
+    console.log("Received location:", data);
+    io.emit("receive-location", { id: socket.id, ...data });
+  });
 
-export { server, app };
+  socket.on("disconnect", () => {
+    console.log("User disconnected: " + socket.id);
+    io.emit("disconnected", socket.id);
+  });
+});
+
+app.get("/", (req, res) => {
+  res.json({ message: "Backend is running!" });
+});
+
+server.listen(3000, () => {
+  console.log("Server running on port 3000");
+});
