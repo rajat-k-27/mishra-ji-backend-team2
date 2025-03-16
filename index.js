@@ -13,10 +13,11 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const server = http.createServer(app);
 
-app.use(express.json());
+app.use(express.json()); // ✅ Ensure JSON parsing middleware is used
+
 app.use(express.static(path.join(__dirname, "public")));
 
-// Routes
+// Import Routes
 import orderRoutes from './routes/orderRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import authRoutes from './routes/authRoutes.js';
@@ -24,27 +25,28 @@ import sellerRoutes from './routes/sellerRoutes.js';
 import trackingRoutes from './routes/trackingRoutes.js';
 import wishlistRoutes from "./routes/wishlistRoutes.js";
 
+// Register Routes
 app.use('/api/orders', orderRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/seller', sellerRoutes);
+app.use('/api/seller', sellerRoutes); // ✅ Correctly registered
 app.use('/api/tracking', trackingRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 
-// Start DB Connection and Server
+// Start the Server
 connectDB()
     .then(() => {
         server.listen(3000, () => {
-            console.log('Server is running on port 3000');
+            console.log('✅ Server is running on port 3000');
         });
 
         // Import socket AFTER server is initialized
         import("./socket/index.js").then(({ default: initSocket }) => {
-            initSocket(server);  // Pass server to socket setup function
+            initSocket(server);
         });
     })
     .catch((err) => {
-        console.log(err);
+        console.log("❌ Database connection error:", err);
     });
 
 export { server, app };
