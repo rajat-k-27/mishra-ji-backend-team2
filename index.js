@@ -22,12 +22,14 @@ import productRoutes from './routes/productRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import sellerRoutes from './routes/sellerRoutes.js';
 import trackingRoutes from './routes/trackingRoutes.js';
+import wishlistRoutes from "./routes/wishlistRoutes.js";
 
 app.use('/api/orders', orderRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/seller', sellerRoutes);
 app.use('/api/tracking', trackingRoutes);
+app.use('/api/wishlist', wishlistRoutes);
 
 // Start DB Connection and Server
 connectDB()
