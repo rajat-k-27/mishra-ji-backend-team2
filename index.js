@@ -17,6 +17,11 @@ app.use(express.json()); // ✅ Ensure JSON parsing middleware is used
 
 app.use(express.static(path.join(__dirname, "public")));
 
+// testing route
+app.get("/", (req, res) => {
+    res.send("Hello, World!");
+});
+
 // Import Routes
 import orderRoutes from './routes/orderRoutes.js';
 import productRoutes from './routes/productRoutes.js';
@@ -24,8 +29,10 @@ import authRoutes from './routes/authRoutes.js';
 import sellerRoutes from './routes/sellerRoutes.js';
 import trackingRoutes from './routes/trackingRoutes.js';
 import wishlistRoutes from "./routes/wishlistRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 // Register Routes
+app.use("/api/users", userRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
